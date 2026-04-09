@@ -36,6 +36,81 @@ platform are placed in the root of the build directory for easy testing, e.g.:
     build/mutagen --help
 
 
+## Quick build
+
+Individual binaries can be built directly with `go build`, provided the correct
+build tag is specified:
+
+    go build -tags mutagencli -o build/mutagen ./cmd/mutagen/
+    go build -tags mutagenagent -o build/mutagen-agent ./cmd/mutagen-agent/
+
+All build output goes into the `build/` directory (which is gitignored).
+
+
+## Build tags
+
+| Tag | Purpose | Required for |
+|-----|---------|-------------|
+| `mutagencli` | Registers built-in transport protocols (SSH/Docker/Local) and disables the tagcheck panic guard | Building the standalone CLI binary |
+| `mutagenagent` | Disables the agent tagcheck panic guard | Building the agent binary |
+| `mutagensspl` | Enables SSPL-licensed enhancements (xxh128 hashing, zstandard compression, Linux fanotify watching) | Optional |
+| `mutagenfanotify` | Enables Linux fanotify filesystem watching (requires `mutagensspl`) | Optional, Linux only |
+| `mutagensidecar` | Builds the sidecar binary | Building the sidecar |
+
+**What happens without the required tag?** Each binary entry point contains a
+`tagcheck.go` guard file with a build constraint of `!mutagencli` or
+`!mutagenagent`. Without the tag, this file is compiled in and the program
+panics at startup. This is by design — Mutagen's command-line code can be
+embedded into third-party tools that register their own protocol handlers, and
+the tagcheck prevents such embedded binaries from being mistakenly run as a
+standalone CLI.
+
+
+## SSPL-enhanced builds
+
+    go build -tags mutagencli,mutagensspl -o build/mutagen ./cmd/mutagen/
+    go build -tags mutagenagent,mutagensspl,mutagenfanotify -o build/mutagen-agent ./cmd/mutagen-agent/
+
+
+## Windows cross-compilation
+
+Two helper scripts are provided in the `build/` directory for producing Windows
+binaries from macOS or Linux:
+
+**`build/build_with_windows_cli.sh`** — Runs the official slim build (native CLI
+\+ multi-platform agent bundle), then cross-compiles a Windows CLI. This is the
+recommended approach:
+
+    ./build/build_with_windows_cli.sh
+
+Output in `build/`: `mutagen` (native), `mutagen.exe` (Windows), and
+`mutagen-agents.tar.gz` (shared agent bundle).
+
+**`build/windows_cross_compile.sh`** — Standalone Windows cross-compilation that
+builds both the Windows CLI and a self-contained agent bundle from scratch,
+without running the full official build:
+
+    ./build/windows_cross_compile.sh                 # amd64 (default)
+    GOARCH=arm64 ./build/windows_cross_compile.sh    # arm64
+
+Output in `build/windows_<arch>/`: `mutagen.exe` and `mutagen-agents.tar.gz`.
+
+> **Important:** `mutagen-agents.tar.gz` must be placed in the same directory as
+> `mutagen.exe`. The CLI locates this bundle at runtime to deploy agents to
+> remote endpoints.
+
+
+## Known build warnings
+
+On macOS, you may see the following compiler warning, which can be safely
+ignored:
+
+    'FSEventStreamScheduleWithRunLoop' is deprecated: first deprecated in macOS 13.0
+
+This originates from the upstream `github.com/mutagen-io/fsevents` dependency
+using a deprecated macOS API. It does not affect functionality.
+
+
 ## Protocol Buffers code generation
 
 Mutagen uses Protocol Buffers extensively, and as such needs to generate Go code

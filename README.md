@@ -89,6 +89,20 @@ incorporate important security fixes. Features marked as experimental may also
 see breakage when necessary, though we will endeavor to keep this to a minimum.
 
 
+## Shell completion
+
+The `mutagen sync` subcommands that operate on existing sessions (`list`,
+`monitor`, `flush`, `pause`, `resume`, `reset`, `terminate`) support
+tab-completion for session identifiers and names. When the daemon is running,
+pressing Tab will query the session list and offer matching candidates with
+endpoint descriptions.
+
+To enable shell completion, generate and source the completion script for your
+shell (bash, zsh, fish, or PowerShell) using Cobra's built-in mechanism, e.g.:
+
+    mutagen completion zsh > ~/.zsh/completions/_mutagen
+
+
 ## Building
 
 Please see the [build instructions](BUILDING.md).
