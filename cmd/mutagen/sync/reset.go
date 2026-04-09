@@ -82,10 +82,11 @@ func resetMain(_ *cobra.Command, arguments []string) error {
 
 // resetCommand is the reset command.
 var resetCommand = &cobra.Command{
-	Use:          "reset [<session>...]",
-	Short:        "Reset synchronization session history",
-	RunE:         resetMain,
-	SilenceUsage: true,
+	Use:               "reset [<session>...]",
+	Short:             "Reset synchronization session history",
+	RunE:              resetMain,
+	SilenceUsage:      true,
+	ValidArgsFunction: completeSessions,
 }
 
 // resetConfiguration stores configuration for the reset command.

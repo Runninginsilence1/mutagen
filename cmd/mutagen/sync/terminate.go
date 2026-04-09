@@ -83,10 +83,11 @@ func terminateMain(_ *cobra.Command, arguments []string) error {
 
 // terminateCommand is the terminate command.
 var terminateCommand = &cobra.Command{
-	Use:          "terminate [<session>...]",
-	Short:        "Permanently terminate a synchronization session",
-	RunE:         terminateMain,
-	SilenceUsage: true,
+	Use:               "terminate [<session>...]",
+	Short:             "Permanently terminate a synchronization session",
+	RunE:              terminateMain,
+	SilenceUsage:      true,
+	ValidArgsFunction: completeSessions,
 }
 
 // terminateConfiguration stores configuration for the terminate command.

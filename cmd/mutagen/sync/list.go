@@ -102,10 +102,11 @@ func listMain(_ *cobra.Command, arguments []string) error {
 
 // listCommand is the list command.
 var listCommand = &cobra.Command{
-	Use:          "list [<session>...]",
-	Short:        "List existing synchronization sessions and their statuses",
-	RunE:         listMain,
-	SilenceUsage: true,
+	Use:               "list [<session>...]",
+	Short:             "List existing synchronization sessions and their statuses",
+	RunE:              listMain,
+	SilenceUsage:      true,
+	ValidArgsFunction: completeSessions,
 }
 
 // listConfiguration stores configuration for the list command.

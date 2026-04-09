@@ -82,10 +82,11 @@ func resumeMain(_ *cobra.Command, arguments []string) error {
 
 // resumeCommand is the resume command.
 var resumeCommand = &cobra.Command{
-	Use:          "resume [<session>...]",
-	Short:        "Resume a paused or disconnected synchronization session",
-	RunE:         resumeMain,
-	SilenceUsage: true,
+	Use:               "resume [<session>...]",
+	Short:             "Resume a paused or disconnected synchronization session",
+	RunE:              resumeMain,
+	SilenceUsage:      true,
+	ValidArgsFunction: completeSessions,
 }
 
 // resumeConfiguration stores configuration for the resume command.

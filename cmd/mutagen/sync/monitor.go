@@ -241,10 +241,11 @@ func monitorMain(_ *cobra.Command, arguments []string) error {
 
 // monitorCommand is the monitor command.
 var monitorCommand = &cobra.Command{
-	Use:          "monitor [<session>...]",
-	Short:        "Display streaming session status information",
-	RunE:         monitorMain,
-	SilenceUsage: true,
+	Use:               "monitor [<session>...]",
+	Short:             "Display streaming session status information",
+	RunE:              monitorMain,
+	SilenceUsage:      true,
+	ValidArgsFunction: completeSessions,
 }
 
 // monitorConfiguration stores configuration for the monitor command.

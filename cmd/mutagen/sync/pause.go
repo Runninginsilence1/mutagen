@@ -82,10 +82,11 @@ func pauseMain(_ *cobra.Command, arguments []string) error {
 
 // pauseCommand is the pause command.
 var pauseCommand = &cobra.Command{
-	Use:          "pause [<session>...]",
-	Short:        "Pause a synchronization session",
-	RunE:         pauseMain,
-	SilenceUsage: true,
+	Use:               "pause [<session>...]",
+	Short:             "Pause a synchronization session",
+	RunE:              pauseMain,
+	SilenceUsage:      true,
+	ValidArgsFunction: completeSessions,
 }
 
 // pauseConfiguration stores configuration for the pause command.

@@ -84,10 +84,11 @@ func flushMain(_ *cobra.Command, arguments []string) error {
 
 // flushCommand is the flush command.
 var flushCommand = &cobra.Command{
-	Use:          "flush [<session>...]",
-	Short:        "Force a synchronization cycle",
-	RunE:         flushMain,
-	SilenceUsage: true,
+	Use:               "flush [<session>...]",
+	Short:             "Force a synchronization cycle",
+	RunE:              flushMain,
+	SilenceUsage:      true,
+	ValidArgsFunction: completeSessions,
 }
 
 // flushConfiguration stores configuration for the flush command.
